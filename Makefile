@@ -32,5 +32,8 @@ migratedown:
 sqlc:
 	sqlc generate
 
-.PHONY: all build run test clean migrateup migratedown sqlc test
+server:
+	go run main.go
+
+.PHONY: all build run test clean migrateup migratedown sqlc test server
 		

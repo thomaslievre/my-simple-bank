@@ -7,7 +7,7 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"github.com/stretchr/testify/require"
-	"github.com/thomaslievre/my-go-api/util"
+	"github.com/thomaslievre/my-simple-bank/util"
 )
 
 func createRandomAccount(t *testing.T) Account {
