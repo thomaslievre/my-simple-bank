@@ -33,7 +33,7 @@ sqlc:
 	sqlc generate
 
 server:
-	go run main.go
+	@go run cmd/api/main.go
 
 .PHONY: all build run test clean migrateup migratedown sqlc test server
 		
