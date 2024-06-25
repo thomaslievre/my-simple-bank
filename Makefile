@@ -35,5 +35,8 @@ sqlc:
 server:
 	@go run cmd/api/main.go
 
-.PHONY: all build run test clean migrateup migratedown sqlc test server
-		
+mock:
+	mockgen -package mockdb -destination db/mock/store.go github.com/thomaslievre/my-simple-bank/db/sqlc Store
+
+.PHONY: all build run test clean migrateup migratedown sqlc test server mock
+	

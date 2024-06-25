@@ -9,7 +9,7 @@ import (
 )
 
 type Server struct {
-	store  *db.Store
+	store  db.Store
 	router *gin.Engine
 }
 
@@ -31,7 +31,7 @@ func ConnectToDB(dbSource string) (*pgxpool.Pool, error) {
 	return dbPool, nil
 }
 
-func NewServer(store *db.Store) *Server {
+func NewServer(store db.Store) *Server {
 	server := &Server{store: store}
 
 	server.RegisterRoutes()
