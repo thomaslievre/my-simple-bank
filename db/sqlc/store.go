@@ -6,6 +6,7 @@ import (
 
 	_ "github.com/golang/mock/mockgen/model"
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -61,6 +62,13 @@ type TransferTxResult struct {
 	ToEntry     Entry    `json:"to_entry"`
 }
 
+func ToPgInt8(i int64) pgtype.Int8 {
+	return pgtype.Int8{
+		Int64: i,
+		Valid: true,
+	}
+}
+
 // TransferTx performs a money transfer from one account to the other
 // It creates a transfer racord, add account entries, and update accounts balance within a single database transaction
 func (store *SQLStore) TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error) {
@@ -69,13 +77,17 @@ func (store *SQLStore) TransferTx(ctx context.Context, arg TransferTxParams) (Tr
 	var fct = func(q *Queries) error {
 		var err error
 
-		result.Transfer, err = q.CreateTransfer(ctx, CreateTransferParams(arg))
+		result.Transfer, err = q.CreateTransfer(ctx, CreateTransferParams{
+			FromAccountID: ToPgInt8(arg.FromAccountID),
+			ToAccountID:   ToPgInt8(arg.ToAccountID),
+			Amount:        arg.Amount,
+		})
 		if err != nil {
 			return err
 		}
 
 		result.FromEntry, err = q.CreateEntry(ctx, CreateEntryParams{
-			AccountID: arg.FromAccountID,
+			AccountID: ToPgInt8(arg.FromAccountID),
 			Amount:    arg.Amount,
 		})
 		if err != nil {
@@ -83,7 +95,7 @@ func (store *SQLStore) TransferTx(ctx context.Context, arg TransferTxParams) (Tr
 		}
 
 		result.ToEntry, err = q.CreateEntry(ctx, CreateEntryParams{
-			AccountID: arg.ToAccountID,
+			AccountID: ToPgInt8(arg.ToAccountID),
 			Amount:    arg.Amount,
 		})
 		if err != nil {
