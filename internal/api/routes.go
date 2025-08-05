@@ -38,5 +38,7 @@ func (s *Server) RegisterRoutes() {
 	router.DELETE("/accounts/:id", s.deleteAccount)
 	router.POST("/transfers/create", s.createTransfer)
 
+	router.POST("/users", s.createUser)
+
 	s.router = router
 }
