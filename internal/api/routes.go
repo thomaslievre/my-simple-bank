@@ -5,8 +5,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/gin-gonic/gin/binding"
-	"github.com/go-playground/validator/v10"
 )
 
 // func messageHandler(message string) http.Handler {
@@ -26,11 +24,9 @@ func logger(next http.Handler) http.Handler {
 func (s *Server) RegisterRoutes() {
 	router := gin.Default()
 
-	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
-		v.RegisterValidation("currency", validCurrency)
-	}
-
 	// routes
+	router.POST("/login", s.loginUser)
+
 	router.POST("/accounts", s.createAccount)
 	router.GET("/accounts/:id", s.getAccount)
 	router.GET("/accounts", s.listAccount)
