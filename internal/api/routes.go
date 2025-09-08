@@ -23,18 +23,18 @@ func logger(next http.Handler) http.Handler {
 
 func (s *Server) RegisterRoutes() {
 	router := gin.Default()
-
-	// routes
+	router.POST("/users", s.createUser)
 	router.POST("/login", s.loginUser)
 
-	router.POST("/accounts", s.createAccount)
-	router.GET("/accounts/:id", s.getAccount)
-	router.GET("/accounts", s.listAccount)
-	router.PATCH("/accounts", s.updateAccount)
-	router.DELETE("/accounts/:id", s.deleteAccount)
-	router.POST("/transfers/create", s.createTransfer)
+	authRoutes := router.Group("/").Use(authMiddleware(s.tokenMaker))
 
-	router.POST("/users", s.createUser)
+	// authenticated routes
+	authRoutes.POST("/accounts", s.createAccount)
+	authRoutes.GET("/accounts/:id", s.getAccount)
+	authRoutes.GET("/accounts", s.listAccount)
+	authRoutes.PATCH("/accounts", s.updateAccount)
+	authRoutes.DELETE("/accounts/:id", s.deleteAccount)
+	authRoutes.POST("/transfers/create", s.createTransfer)
 
 	s.router = router
 }
