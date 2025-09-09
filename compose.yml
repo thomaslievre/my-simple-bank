@@ -1,0 +1,57 @@
+version: "3.9"
+
+services:
+  # db:
+  #   container_name: "testingAuth"
+  #   image: postgres:12.4-alpine
+  #   volumes:
+  #     - "./database/postgres-data:/var/lib/postgresql/data:rw"
+  #   ports:
+  #     - "5432:5432"
+  #   environment:
+  #     POSTGRES_DB: "postgres"
+  #     POSTGRES_USER: "postgres"
+  #     POSTGRES_PASSWORD: "postgres"
+  #   restart: unless-stopped
+
+  db:
+    image: postgres:14-alpine
+    container_name: simple-bank-db
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PW}
+      - POSTGRES_DB=${POSTGRES_DB} #optional (specify default database instead of $POSTGRES_DB)
+      - DEBUG=true
+    ports:
+      - "5432:5432"
+    volumes:
+      - data-volume:/var/lib/postgresql/data
+    restart: unless-stopped
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4:latest
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_MAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PW}
+    ports:
+      - "5050:80"
+    restart: always
+  redis:
+    image: redis:7-alpine
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+      - "9090:9090"
+    environment:
+      - DB_SOURCE=postgresql://root:secret@postgres:5432/simple_bank?sslmode=disable
+      - REDIS_ADDRESS=redis:6379
+    depends_on:
+      - db
+      - redis
+    entrypoint: ["/app/start.sh"]
+    command: ["/app/main"]
+volumes:
+  data-volume:
