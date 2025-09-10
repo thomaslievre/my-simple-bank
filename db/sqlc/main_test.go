@@ -7,21 +7,22 @@ import (
 	"testing"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/thomaslievre/my-simple-bank/util"
 )
 
 var testQueries *Queries
 var testDb *pgxpool.Pool
 
-const (
-	dbSource = "postgresql://bankroot:secret@localhost:5432/simple_bank?sslmode=disable"
-)
-
 func TestMain(m *testing.M) {
 	var err error
-	// conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
-	// testDb, err = pgx.Connect(context.Background(), dbSource)
 
-	poolConfig, err := pgxpool.ParseConfig(dbSource)
+	config, err := util.LoadConfig("../..")
+
+	if err != nil {
+		log.Fatal("cannot load config:", err)
+	}
+
+	poolConfig, err := pgxpool.ParseConfig(config.DBSource)
 	if err != nil {
 		log.Fatalln("Unable to parse DATABASE_URL:", err)
 	}

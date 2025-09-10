@@ -26,11 +26,23 @@ clean:
 migrateup:
 	migrate -path db/migration -database "postgresql://bankroot:secret@localhost:5432/simple_bank?sslmode=disable" -verbose up
 
+migrateup1:
+	migrate -path db/migration -database "postgresql://bankroot:secret@localhost:5432/simple_bank?sslmode=disable" -verbose up 1
+
 migratedown:
 	migrate -path db/migration -database "postgresql://bankroot:secret@localhost:5432/simple_bank?sslmode=disable" -verbose down
+
+migratedown1:
+	migrate -path db/migration -database "postgresql://bankroot:secret@localhost:5432/simple_bank?sslmode=disable" -verbose down 1
 
 sqlc:
 	sqlc generate
 
-.PHONY: all build run test clean migrateup migratedown sqlc test
-		
+server:
+	@go run cmd/api/main.go
+
+mock:
+	mockgen -package mockdb -destination db/mock/store.go github.com/thomaslievre/my-simple-bank/db/sqlc Store
+
+.PHONY: all build run test clean migrateup migratedown sqlc test server mock
+	
