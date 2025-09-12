@@ -24,7 +24,6 @@ jobs:
           POSTGRES_USER: bankroot
           POSTGRES_PASSWORD: secret
           POSTGRES_DB: simple_bank
-        # Set health checks to wait until postgres has started
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
