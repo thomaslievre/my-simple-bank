@@ -1,6 +1,5 @@
 
 # Simple Makefile for a Go project
-DB_URL=postgresql://bankroot:secret@localhost:5432/simple_bank?sslmode=disable
 
 # Build the application
 all: build
@@ -25,16 +24,16 @@ clean:
 	@rm -f main
 
 migrateup:
-	migrate -path db/migration -database "$(DB_URL)" -verbose up
+	migrate -path db/migration -database "$(DB_SOURCE)" -verbose up
 
 migrateup1:
-	migrate -path db/migration -database "$(DB_URL)" -verbose up 1
+	migrate -path db/migration -database "$(DB_SOURCE)" -verbose up 1
 
 migratedown:
-	migrate -path db/migration -database "$(DB_URL)" -verbose down
+	migrate -path db/migration -database "$(DB_SOURCE)" -verbose down
 
 migratedown1:
-	migrate -path db/migration -database "$(DB_URL)" -verbose down 1
+	migrate -path db/migration -database "$(DB_SOURCE)" -verbose down 1
 
 sqlc:
 	sqlc generate

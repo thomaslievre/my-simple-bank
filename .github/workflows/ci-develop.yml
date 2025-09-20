@@ -13,6 +13,8 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
+    env:
+      DB_SOURCE: postgresql://bankroot:secret@localhost:5432/simple_bank?sslmode=disable
     # Service containers to run with `container-job`
     services:
       # Label used to access the service container
