@@ -1,7 +1,5 @@
-version: "3.9"
-
 services:
-  db:
+  postgres:
     image: postgres:14-alpine
     container_name: simple-bank-db
     environment:
@@ -14,6 +12,8 @@ services:
     volumes:
       - data-volume:/var/lib/postgresql/data
     restart: unless-stopped
+    networks:
+      - bank-network
   redis:
     image: redis:7-alpine
   api:
@@ -24,12 +24,18 @@ services:
       - "8080:8080"
       - "9090:9090"
     environment:
-      - DB_SOURCE=postgresql://root:secret@postgres:5432/simple_bank?sslmode=disable
+      - DB_SOURCE=postgresql://bankroot:secret@postgres:5432/simple_bank?sslmode=disable
       - REDIS_ADDRESS=redis:6379
     depends_on:
-      - db
+      - postgres
       - redis
+    networks:
+      - bank-network
     entrypoint: ["/app/start.sh"]
     command: ["/app/main"]
 volumes:
   data-volume:
+networks:
+  bank-network:
+    driver: bridge
+    name: bank-network
