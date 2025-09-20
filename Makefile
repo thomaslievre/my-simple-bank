@@ -1,6 +1,6 @@
 
 # Simple Makefile for a Go project
-DB_URL=postgresql://root:secret@postgres:5432/simple_bank?sslmode=disable
+DB_URL=postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable
 
 # Build the application
 all: build
