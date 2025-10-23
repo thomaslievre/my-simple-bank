@@ -46,6 +46,9 @@ jobs:
           sudo mv migrate /usr/bin
           which migrate
 
+      - name: Switch to server directory
+        run: cd server
+
       - name: Run migrations
         run: make migrateup
 
