@@ -39,29 +39,30 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: oven-sh/setup-bun@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          bun-version: latest # or "latest", "canary", <sha>
+          node-version: "22"
 
       - name: Install Hardhat dependencies
         run: |
           cd smart-contract
-          bun install
+          npm ci
 
       - name: Compile smart contracts
         run: |
           cd smart-contract
-          bunx hardhat compile
+          npx hardhat compile
 
       - name: Test smart contracts
         run: |
           cd smart-contract
-          bunx hardhat test
+          npx hardhat test
 
       - name: Start Hardhat node
         run: |
           cd smart-contract
-          nohup bunx hardhat node &
+          nohup npx hardhat node &
           sleep 5
 
       - name: Set up Go
