@@ -4,11 +4,13 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
 	"github.com/jackc/pgx/v5/pgxpool"
 	db "github.com/thomaslievre/my-simple-bank/db/sqlc"
+	"github.com/thomaslievre/my-simple-bank/internal/blockchain"
 	"github.com/thomaslievre/my-simple-bank/internal/token"
 	"github.com/thomaslievre/my-simple-bank/util"
 )
@@ -18,6 +20,7 @@ type Server struct {
 	store      db.Store
 	tokenMaker token.Maker
 	router     *gin.Engine
+	ethClient  *ethclient.Client
 }
 
 func ConnectToDB(dbSource string) (*pgxpool.Pool, error) {
@@ -44,7 +47,9 @@ func NewServer(config util.Config, store db.Store) (*Server, error) {
 		return nil, fmt.Errorf("cannot create token maker: %w", err)
 	}
 
-	server := &Server{store: store, tokenMaker: tokenMaker, config: config}
+	ethClient := blockchain.NewEthClient(config.EthRpcUrl) // Ajoute cette ligne
+
+	server := &Server{store: store, tokenMaker: tokenMaker, config: config, ethClient: ethClient}
 
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		v.RegisterValidation("currency", validCurrency)

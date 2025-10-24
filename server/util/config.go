@@ -13,6 +13,7 @@ type Config struct {
 	ServerAddress       string        `mapstructure:"SERVER_ADDRESS"`
 	TokenSymmetricKey   string        `mapstructure:"TOKEN_SYMMETRIC_KEY"`
 	AccessTokenDuration time.Duration `mapstructure:"ACCESS_TOKEN_DURATION"`
+	EthRpcUrl           string        `mapstructure:"ETH_RPC_URL"`
 }
 
 func LoadConfig(path string) (config Config, err error) {
