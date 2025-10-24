@@ -39,10 +39,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Bun
-        run: |
-          curl -fsSL https://bun.sh/install | bash
-          export PATH="$HOME/.bun/bin:$PATH"
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.2.0 # or "latest", "canary", <sha>
 
       - name: Install Hardhat dependencies
         run: |
