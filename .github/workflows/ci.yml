@@ -46,11 +46,12 @@ jobs:
           sudo mv migrate /usr/bin
           which migrate
 
-      - name: Switch to server directory
-        run: cd server
-
       - name: Run migrations
-        run: make migrateup
+        run: |
+          cd server
+          make migrateup
 
       - name: Test
-        run: make test
+        run: |
+          cd server
+          make test
