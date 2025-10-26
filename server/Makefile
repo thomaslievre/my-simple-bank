@@ -1,5 +1,6 @@
-
 # Simple Makefile for a Go project
+
+DB_SOURCE=postgresql://bankroot:secret@postgres:5432/simple_bank?sslmode=disable
 
 # Build the application
 all: build
