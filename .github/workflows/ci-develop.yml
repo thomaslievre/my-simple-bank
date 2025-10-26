@@ -13,6 +13,8 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
+    env:
+      DB_SOURCE: postgresql://bankroot:secret@localhost:5432/simple_bank?sslmode=disable
     # Service containers to run with `container-job`
     services:
       # Label used to access the service container
@@ -37,10 +39,36 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install Hardhat dependencies
+        run: |
+          cd smart-contract
+          npm ci
+
+      - name: Compile smart contracts
+        run: |
+          cd smart-contract
+          npx hardhat compile
+
+      - name: Test smart contracts
+        run: |
+          cd smart-contract
+          npx hardhat test
+
+      - name: Start Hardhat node
+        run: |
+          cd smart-contract
+          nohup npx hardhat node &
+          sleep 5
+
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: "1.22.0"
+          go-version: "1.24.0"
 
       - name: Install golang-migrate
         run: |
@@ -50,7 +78,11 @@ jobs:
           which migrate
 
       - name: Run migrations
-        run: make migrateup
+        run: |
+          cd server
+          make migrateup
 
       - name: Test
-        run: make test
+        run: |
+          cd server
+          make test
