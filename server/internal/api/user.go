@@ -75,14 +75,6 @@ func (server *Server) createUser(ctx *gin.Context) {
 		return
 	}
 
-	// resp := userResponse{
-	// 	Username:          user.Username,
-	// 	FullName:          user.FullName,
-	// 	Email:             user.Email,
-	// 	PasswordChangedAt: user.PasswordChangedAt.Time,
-	// 	CreatedAt:         user.CreatedAt.Time,
-	// }
-
 	resp := newUserResponse(user)
 	ctx.JSON(http.StatusOK, resp)
 }

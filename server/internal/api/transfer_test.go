@@ -108,3 +108,29 @@ func TestCreateTransferAPI(t *testing.T) {
 		})
 	}
 }
+
+// func TestSendTransfer(t *testing.T) {
+// 	// Adresse du contrat déployé sur Hardhat local
+// 	contractAddr := common.HexToAddress("0x5FbDB2315678afecb367f032d93F642f64180aa3")
+// 	ethClient, err := blockchain.NewEthereumClient("http://localhost:8545")
+// 	if err != nil {
+// 		t.Fatalf("failed to connect to eth client: %v", err)
+// 	}
+
+// 	instance, err := blockchain.NewTransfer(contractAddr, ethClient)
+// 	if err != nil {
+// 		t.Fatalf("failed to bind contract: %v", err)
+// 	}
+
+// 	// Adresse de destination fictive
+// 	to := common.HexToAddress("0x0000000000000000000000000000000000000001")
+// 	amount := big.NewInt(10000000000000000) // 0.01 ETH
+
+// 	// Appel de la fonction Send (adapter selon ton binding)
+// 	// tx, err := instance.Send(auth, to, amount)
+// 	// if err != nil {
+// 	//     t.Fatalf("failed to send transfer: %v", err)
+// 	// }
+
+// 	// Vérifie que la transaction a été envoyée (selon ton binding)
+// }
